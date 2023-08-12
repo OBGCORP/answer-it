@@ -2,6 +2,7 @@ package com.obg.answerit.controllers;
 
 import com.obg.answerit.entities.UserEntity;
 import com.obg.answerit.repositories.UserRepository;
+import com.obg.answerit.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,39 +14,30 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("")
     public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @PostMapping("")
     public UserEntity createUser(@RequestBody UserEntity newUser) {
-        return userRepository.save(newUser);
+        return userService.createUser(newUser);
     }
 
     @GetMapping("/{userId}")
-    public UserEntity getUser(@PathVariable Long userId) {
-        return userRepository.findById(userId).orElse(null);
+    public UserEntity getUserById(@PathVariable Long userId) {
+        return userService.getUserById(userId);
     }
 
     @PutMapping("/{userId}")
     public UserEntity updateUser(@PathVariable Long userId, @RequestBody UserEntity updatedUserBody) {
-        Optional<UserEntity> user = userRepository.findById(userId);
-        if(user.isPresent()) {
-            UserEntity userToBeUpdated = user.get();
-            userToBeUpdated.setUsername(updatedUserBody.getUsername());
-            userToBeUpdated.setPassword(updatedUserBody.getPassword());
-            userRepository.save(userToBeUpdated);
-            return updatedUserBody;
-        } else {
-            return null;
-        }
+        return userService.updateUser(userId, updatedUserBody);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Long userId) {
-        userRepository.deleteById(userId);
+        userService.deleteUserById(userId);
     }
 }
