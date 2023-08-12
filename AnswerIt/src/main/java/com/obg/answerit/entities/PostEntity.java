@@ -1,7 +1,10 @@
 package com.obg.answerit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table
@@ -9,8 +12,15 @@ import lombok.Data;
 public class PostEntity {
     @Id
     private Long id;
-    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private UserEntity userEntity;
+
     private String title;
+
     @Lob
     @Column(columnDefinition = "text")
     private String text;
