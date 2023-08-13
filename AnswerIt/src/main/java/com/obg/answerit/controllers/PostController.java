@@ -1,6 +1,8 @@
 package com.obg.answerit.controllers;
 
 import com.obg.answerit.entities.PostEntity;
+import com.obg.answerit.requests.PostCreateRequest;
+import com.obg.answerit.requests.PostUpdateRequest;
 import com.obg.answerit.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,17 @@ public class PostController {
     }
 
     @PostMapping
-    public PostEntity createPost(@RequestBody PostEntity newPost) {
-        return postService.createPost(newPost);
+    public PostEntity createPost(@RequestBody PostCreateRequest newPostRequest) {
+        return postService.createPost(newPostRequest);
+    }
+
+    @PutMapping("/{postId}")
+    public PostEntity updatePost(@PathVariable Long postId, @RequestBody PostUpdateRequest updatePost) {
+        return postService.updatePost(postId, updatePost);
+    }
+
+    @DeleteMapping("/{postId}")
+    public void deletePostById(@PathVariable Long postId) {
+        postService.deletePostById(postId);
     }
 }
